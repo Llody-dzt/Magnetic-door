@@ -1163,11 +1163,21 @@ void gpio_door_init(void)
 
 void door_gpio_interrupt(gpio_pin_e pin)
 {
+	if(pin == DOOR_STATE)
+	{
+	hal_gpio_pin_init(pin,IE);
+	hal_gpioretention_register(pin);
+	hal_gpio_pull_set(pin,GPIO_FLOATING) ; 
+	hal_gpioin_enable(pin) ; 
+	hal_gpioin_register(pin, res_network_event_handler, res_network_event_handler);	
+	}
+	else{
 	hal_gpio_pin_init(pin,IE);
 	hal_gpioretention_register(pin);
 	hal_gpio_pull_set(pin,STRONG_PULL_UP) ; 
 	hal_gpioin_enable(pin) ; 
 	hal_gpioin_register(pin, res_network_event_handler, res_network_event_handler);	
+	}
 }
 void res_network_event_handler(GPIO_Pin_e pin,IO_Wakeup_Pol_e type)
 {
